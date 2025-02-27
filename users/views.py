@@ -34,12 +34,9 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def profile(self, request):
         """Fetch the authenticated user's profile"""
-        try:
-            profile = Profile.objects.get(user=request.user)
-            serializer = ProfileSerializer(profile)
-            return Response(serializer.data)
-        except Profile.DoesNotExist:
-            return Response({"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+        profile, created = Profile.objects.get_or_create(user=request.user)  # Ensure profile exists
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data)
 
     @action(detail=False, methods=['put'], permission_classes=[IsAuthenticated])
     def update_profile(self, request):
