@@ -8,12 +8,12 @@ class BookingViewSet(viewsets.ModelViewSet):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
     permission_classes = [IsAuthenticated]
-    http_method_names = ['get', 'post', 'put', 'patch', 'delete']  # Ensure POST is allowed
+    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
 
     def get_queryset(self):
-        # You can restrict the queryset based on the logged-in user
-        return Booking.objects.filter(user=self.request.user)
+        # Filter bookings by the logged-in user's PROFILE
+        return Booking.objects.filter(user=self.request.user.profile)  # 👈 Changed
 
     def perform_create(self, serializer):
-        # Ensure the logged-in user is automatically assigned to the booking
-        serializer.save(user=self.request.user)
+        # Assign the user's PROFILE (not the User instance)
+        serializer.save(user=self.request.user.profile)  # 👈 Changed

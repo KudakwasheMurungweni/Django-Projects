@@ -76,13 +76,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return user
 
 
+# users/views.py
 class UserCreateView(views.APIView):
-    """Handles user registration"""
     permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = UserCreateSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            return Response({'user': serializer.data}, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)  # Now includes profile data
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
