@@ -2,25 +2,26 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Profile
 
-class UserCreateSerializer(serializers.ModelSerializer):
-    # Example profile fields (adjust based on your Profile model)
+class UserSerializer(serializers.ModelSerializer):
+    # Profile-related fields (should match Profile model)
     phone = serializers.CharField(write_only=True, required=False)
     bio = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'phone', 'address']  # 👈 Add profile fields
+        # Include only valid User fields + profile extensions
+        fields = ['username', 'email', 'password', 'phone', 'bio']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        # Extract profile-related fields (customize based on your Profile model)
+        # Correctly extract profile fields
         phone = validated_data.pop('phone', None)
-        bio = validated_data.pop('address', None)
+        bio = validated_data.pop('bio', None)  # Fixed from 'address'
         
-        # Create the user (triggers the signal to create a Profile)
+        # Create user
         user = User.objects.create_user(**validated_data)
         
-        # Update the newly created Profile with extracted data
+        # Update associated profile
         profile = user.profile
         if phone:
             profile.phone = phone
@@ -31,10 +32,16 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return user
 
     def to_representation(self, instance):
-        # Include profile data in the response
         representation = super().to_representation(instance)
+        # Add profile data to response
         representation['profile'] = {
             'phone': instance.profile.phone,
             'bio': instance.profile.bio
         }
         return representation
+
+# Add ProfileSerializer to fix the import error
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['phone', 'bio', 'address']  # Update with actual Profile model fields
