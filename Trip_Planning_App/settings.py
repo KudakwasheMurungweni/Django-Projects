@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'bookings',
     'reviews',
     'django_extensions',
+    
    
 ]
 MIDDLEWARE = [
