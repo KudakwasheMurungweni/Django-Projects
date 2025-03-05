@@ -44,4 +44,4 @@ class UserSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['phone', 'bio', 'address']  # Update with actual Profile model fields
+        fields = ['phone', 'bio']  # Remove 'address' if it doesn't exist in the model
