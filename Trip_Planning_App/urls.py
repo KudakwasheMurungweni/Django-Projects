@@ -6,7 +6,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from users.views import UserCreateView  # Import the registration view
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # Admin
@@ -25,4 +26,4 @@ urlpatterns = [
     
     # Optional: Add user management routes if needed
     path('api/users/', include('users.urls')),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
