@@ -20,7 +20,7 @@ urlpatterns = [
     
     # Preserve your existing app routes
     path('api/trips/', include('trips.urls')),
-    path('api/destinations/', include('destinations.urls')),
+     path('api/destinations/', include('destinations.urls')),
     path('api/bookings/', include('bookings.urls')),
     path('api/reviews/', include('reviews.urls')),
     
