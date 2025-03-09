@@ -1,10 +1,11 @@
-from django.urls import path, include
+# trips/urls.py
+from django.urls import path
+from .views import TripViewSet, DashboardView
 from rest_framework.routers import DefaultRouter
-from .views import TripViewSet
 
 router = DefaultRouter()
-router.register(r'', TripViewSet, basename='trip')  # Ensure empty route for trips
+router.register(r'trips', TripViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),  # Include the router
-]
+    path('api/dashboard/', DashboardView.as_view(), name='dashboard'),
+] + router.urls
