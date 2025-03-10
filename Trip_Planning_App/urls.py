@@ -17,7 +17,7 @@ urlpatterns = [
     # JWT Authentication (Added this section)
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    
+    path('api/dashboard/', include('dashboard.urls')),
     # Preserve your existing app routes
     path('api/trips/', include('trips.urls')),
      path('api/destinations/', include('destinations.urls')),
