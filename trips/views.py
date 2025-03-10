@@ -1,4 +1,3 @@
-# trips/views.py
 from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
@@ -52,8 +51,17 @@ class TripViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        """Only show trips belonging to the current user"""
-        return self.queryset.filter(user=self.request.user.profile)
+        """
+        Return different querysets based on the action:
+        - For list: return all available trips
+        - For other actions: only trips belonging to the current user
+        """
+        if self.action == 'list':
+            # Return all trips available for booking
+            return self.queryset.all()
+        else:
+            # For detail, update, delete - only allow user's own trips
+            return self.queryset.filter(user=self.request.user.profile)
     
     def perform_create(self, serializer):
         """Automatically associate trip with current user"""

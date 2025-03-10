@@ -4,6 +4,13 @@ from destinations.models import Destination
 
 
 class Trip(models.Model):
+    STATUS_CHOICES = [
+        ('planning', 'Planning'),
+        ('upcoming', 'Upcoming'),
+        ('ongoing', 'Ongoing'),
+        ('completed', 'Completed')
+    ]
+    
     # Use string format for foreign key to avoid circular imports
     user = models.ForeignKey(
         'users.Profile', 
@@ -14,13 +21,18 @@ class Trip(models.Model):
     description = models.TextField()
     start_date = models.DateField()
     end_date = models.DateField()
+    status = models.CharField(
+        max_length=20, 
+        choices=STATUS_CHOICES,
+        default='upcoming'
+    )
     
     # Use string reference for ManyToManyField
     destinations = models.ManyToManyField(
         'destinations.Destination',
         related_name='trips'
     )
-    
+
     image = models.ImageField(
         upload_to='trip_images/',
         null=True,
